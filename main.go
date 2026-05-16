@@ -16,7 +16,6 @@ import (
 	"net"
 	"os"
 	"os/user"
-	"slices"
 	"strings"
 )
 
@@ -40,7 +39,14 @@ func (s *server) Status(c context.Context, req *emptypb.Empty) (*pb.StatusReply,
 	}
 	var regions []string
 	for _, instance := range Instances {
-		if !slices.Contains(regions, instance.Region) {
+		found := false
+		for _, r := range regions {
+			if r == instance.Region {
+				found = true
+				break
+			}
+		}
+		if !found {
 			regions = append(regions, instance.Region)
 		}
 	}

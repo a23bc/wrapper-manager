@@ -247,8 +247,13 @@ func DownloadWrapperRelease(mirror bool) {
 	} else {
 		panic("unsupported arch")
 	}
+	defer resp.Body.Close()
 	buf := new(strings.Builder)
 	_, err := io.Copy(buf, resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	log.Debugf("GitHub API response: %s", buf.String())
 	var info struct {
 		Assets []map[string]interface{} `json:"assets"`
 	}
@@ -256,6 +261,7 @@ func DownloadWrapperRelease(mirror bool) {
 	if err != nil {
 		panic(err)
 	}
+	log.Debugf("Parsed assets count: %d", len(info.Assets))
 	if len(info.Assets) == 0 {
 		panic("no assets found in the release")
 	}
@@ -267,7 +273,11 @@ func DownloadWrapperRelease(mirror bool) {
 	if err != nil {
 		panic(err)
 	}
+	defer wrapperResp.Body.Close()
 	binary, err := io.ReadAll(wrapperResp.Body)
+	if err != nil {
+		panic(err)
+	}
 	if runtime.GOARCH == "amd64" {
 		err = os.WriteFile("data/wrapper-x86_64.zip", binary, 0777)
 	} else if runtime.GOARCH == "arm64" {
