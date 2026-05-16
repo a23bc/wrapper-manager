@@ -240,7 +240,7 @@ func DownloadWrapperRelease(mirror bool) {
 		}
 	} else if runtime.GOARCH == "arm64" {
 		var err error
-		resp, err = GetHttpClient().Get("https://api.github.com/repos/WorldObservationLog/wrapper/releases/tags/Wrapper.arm64.latest")
+		resp, err = GetHttpClient().Get("https://api.github.com/repos/WorldObservationLog/wrapper/releases/tags/wrapper.arm64.latest")
 		if err != nil {
 			panic(err)
 		}
@@ -255,6 +255,9 @@ func DownloadWrapperRelease(mirror bool) {
 	err = json.Unmarshal([]byte(buf.String()), &info)
 	if err != nil {
 		panic(err)
+	}
+	if len(info.Assets) == 0 {
+		panic("no assets found in the release")
 	}
 	downloadUrl := info.Assets[0]["browser_download_url"]
 	if mirror {
