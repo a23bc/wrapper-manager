@@ -2,7 +2,6 @@ package main
 
 import (
 	pb "github.com/WorldObservationLog/wrapper-manager/proto"
-	"google.golang.org/grpc"
 	"log"
 	"sync"
 )
