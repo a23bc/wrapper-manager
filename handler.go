@@ -11,7 +11,7 @@ var LoginConnMap = sync.Map{}
 
 func Login2FAHandler(id string) {
 	conn, _ := LoginConnMap.Load(id)
-	err := conn.(grpc.BidiStreamingServer[pb.LoginRequest, pb.LoginReply]).Send(
+	err := conn.(pb.WrapperManagerService_LoginServer).Send(
 		&pb.LoginReply{
 			Header: &pb.ReplyHeader{
 				Code: 2,
@@ -29,7 +29,7 @@ func LoginDoneHandler(id string) {
 	if conn == nil {
 		return
 	}
-	err := conn.(grpc.BidiStreamingServer[pb.LoginRequest, pb.LoginReply]).Send(
+	err := conn.(pb.WrapperManagerService_LoginServer).Send(
 		&pb.LoginReply{
 			Header: &pb.ReplyHeader{
 				Code: 0,
@@ -47,7 +47,7 @@ func LoginFailedHandler(id string) {
 	if conn == nil {
 		return
 	}
-	err := conn.(grpc.BidiStreamingServer[pb.LoginRequest, pb.LoginReply]).Send(
+	err := conn.(pb.WrapperManagerService_LoginServer).Send(
 		&pb.LoginReply{
 			Header: &pb.ReplyHeader{
 				Code: -1,

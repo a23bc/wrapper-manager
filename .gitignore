@@ -9,23 +9,23 @@
 *.test
 *.prof
 
-# Go cache and modules
-go.mod
-go.sum
-!go.mod
-!go.sum
-vendor/
+# Go cache and tools
+.cache/
+go.exe
 *.mod
 *.sum
 
-# Binaries
-bin/
-*.bin
+# Generated files
+proto/*.pb.go
+proto/*_grpc.pb.go
+
+# Dependencies
+vendor/
 
 # Build directories
-build/
-_dist/
-_output/
+bin/
+pkg/
+target/
 
 # Logs
 *.log
@@ -35,7 +35,7 @@ _output/
 .env.local
 *.env.*
 
-# Editor
+# Editor/IDE
 .vscode/
 .idea/
 *.swp
@@ -46,5 +46,10 @@ Thumbs.db
 
 # Coverage
 coverage/
-*.coverprofile
+htmlcov/
+.coverage
+
+# Temp files
+*.tmp
+*.temp
 ```

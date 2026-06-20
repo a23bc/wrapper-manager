@@ -64,7 +64,7 @@ func (s *server) Status(c context.Context, req *emptypb.Empty) (*pb.StatusReply,
 	}, nil
 }
 
-func (s *server) Login(stream grpc.BidiStreamingServer[pb.LoginRequest, pb.LoginReply]) error {
+func (s *server) Login(stream pb.WrapperManagerService_LoginServer) error {
 	p, ok := peer.FromContext(stream.Context())
 	if ok {
 		log.Infof("login stream from %s", p.Addr.String())
@@ -141,7 +141,7 @@ func (s *server) Logout(c context.Context, req *pb.LogoutRequest) (*pb.LogoutRep
 	}, nil
 }
 
-func (s *server) Decrypt(stream grpc.BidiStreamingServer[pb.DecryptRequest, pb.DecryptReply]) error {
+func (s *server) Decrypt(stream pb.WrapperManagerService_DecryptServer) error {
 	p, ok := peer.FromContext(stream.Context())
 	if ok {
 		log.Infof("decrypt stream from %s", p.Addr.String())
