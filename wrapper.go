@@ -232,15 +232,14 @@ func RemoveWrapperData(id string) {
 
 func DownloadWrapperRelease(mirror bool) {
 	var resp *http.Response
+	var err error
 	if runtime.GOARCH == "amd64" {
-		var err error
-		resp, err = GetHttpClient().Get("https://api.github.com/repos/WorldObservationLog/wrapper/releases/latest")
+		resp, err = GetHttpClient().Get("https://api.github.com/repos/WorldObservationLog/wrapper/releases/tags/wrapper.x86_64.latest")
 		if err != nil {
 			panic(err)
 		}
 	} else if runtime.GOARCH == "arm64" {
-		var err error
-		resp, err = GetHttpClient().Get("https://api.github.com/repos/WorldObservationLog/wrapper/releases/tags/Wrapper.arm64.latest")
+		resp, err = GetHttpClient().Get("https://api.github.com/repos/WorldObservationLog/wrapper/releases/tags/wrapper.arm64.latest")
 		if err != nil {
 			panic(err)
 		}
@@ -248,7 +247,10 @@ func DownloadWrapperRelease(mirror bool) {
 		panic("unsupported arch")
 	}
 	buf := new(strings.Builder)
-	_, err := io.Copy(buf, resp.Body)
+	_, err = io.Copy(buf, resp.Body)
+	if err != nil {
+		panic(err)
+	}
 	var info struct {
 		Assets []map[string]interface{} `json:"assets"`
 	}
@@ -265,6 +267,9 @@ func DownloadWrapperRelease(mirror bool) {
 		panic(err)
 	}
 	binary, err := io.ReadAll(wrapperResp.Body)
+	if err != nil {
+		panic(err)
+	}
 	if runtime.GOARCH == "amd64" {
 		err = os.WriteFile("data/wrapper-x86_64.zip", binary, 0777)
 	} else if runtime.GOARCH == "arm64" {
@@ -272,7 +277,6 @@ func DownloadWrapperRelease(mirror bool) {
 	} else {
 		panic("unsupported arch")
 	}
-
 	if err != nil {
 		panic(err)
 	}
