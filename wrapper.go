@@ -155,8 +155,8 @@ func handleOutput(reader io.Reader, instance *WrapperInstance) {
 	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if !strings.HasPrefix(line, "__") || !strings.HasPrefix(line, "WARNING") {
-			log.Debug(fmt.Sprintf("[wrapper %s]", strings.Split(instance.Id, "-")[0]), line)
+		if !strings.HasPrefix(line, "__") && !strings.HasPrefix(line, "WARNING") {
+			log.Info(fmt.Sprintf("[wrapper %s] %s", strings.Split(instance.Id, "-")[0], line))
 		}
 
 		if strings.Contains(line, "Waiting for input...") {
